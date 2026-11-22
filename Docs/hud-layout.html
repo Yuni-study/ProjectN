@@ -1,0 +1,144 @@
+<style>
+  #projectn-hud-mockup {
+    --hud-bg: rgba(9, 16, 24, 0.88);
+    --hud-bg-soft: rgba(9, 16, 24, 0.68);
+    --hud-text: #f2f5f7;
+    --hud-muted: #a9b5bd;
+    --hud-cyan: #71d9e8;
+    --hud-green: #9ee6ae;
+    --hud-orange: #ffbf70;
+    --hud-red: #ff706f;
+    width: 100%;
+    color: var(--hud-text);
+    font: 500 clamp(11px, 1.25vw, 16px)/1.25 "Segoe UI", "Malgun Gothic", sans-serif;
+  }
+  #projectn-hud-mockup * { box-sizing: border-box; }
+  #projectn-hud-mockup .screen {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(ellipse at 52% 36%, rgba(186, 169, 128, .2), transparent 35%),
+      linear-gradient(180deg, #263745 0%, #46545a 42%, #252c30 76%, #151b20 100%);
+  }
+  #projectn-hud-mockup .screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: .34;
+    background: repeating-linear-gradient(113deg, transparent 0 68px, rgba(220, 222, 210, .08) 69px 71px, transparent 72px 138px);
+  }
+  #projectn-hud-mockup .horizon { position: absolute; left: 0; right: 0; top: 35%; height: 2px; background: rgba(230, 226, 205, .18); }
+  #projectn-hud-mockup .road {
+    position: absolute;
+    left: 20%; right: 19%; top: 34%; bottom: 0;
+    background: linear-gradient(180deg, rgba(113, 117, 108, .18), rgba(31, 37, 39, .68));
+    clip-path: polygon(39% 0, 64% 0, 100% 100%, 0 100%);
+  }
+  #projectn-hud-mockup .lane-mark { position:absolute; top:37%; left:49%; width:2px; height:56%; background:linear-gradient(rgba(228,220,184,.5), transparent); transform:rotate(1deg); }
+  #projectn-hud-mockup .building { position:absolute; bottom:32%; background:linear-gradient(145deg,#536068,#303940); box-shadow:inset -12px 0 rgba(0,0,0,.16); }
+  #projectn-hud-mockup .building::after { content:""; position:absolute; inset:12% 12%; background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(15,22,27,.48) 19px 24px), repeating-linear-gradient(0deg,transparent 0 22px,rgba(15,22,27,.4) 23px 27px); }
+  #projectn-hud-mockup .b1 { left:0; width:23%; height:38%; clip-path:polygon(0 8%,78% 0,100% 100%,0 100%); }
+  #projectn-hud-mockup .b2 { left:20%; width:17%; height:30%; background:linear-gradient(145deg,#47535a,#252d32); clip-path:polygon(8% 0,100% 10%,87% 100%,0 100%); }
+  #projectn-hud-mockup .b3 { right:21%; width:18%; height:36%; clip-path:polygon(20% 0,100% 8%,100% 100%,0 100%); }
+  #projectn-hud-mockup .b4 { right:0; width:25%; height:46%; background:linear-gradient(145deg,#48565e,#293238); clip-path:polygon(10% 0,100% 5%,100% 100%,0 100%); }
+  #projectn-hud-mockup .debris { position:absolute; bottom:23%; width:8%; height:4%; background:#7b8179; opacity:.55; transform:skew(-28deg) rotate(-8deg); }
+  #projectn-hud-mockup .d1 { left:30%; } #projectn-hud-mockup .d2 { right:31%; bottom:27%; width:6%; }
+  #projectn-hud-mockup .cover { position:absolute; bottom:27%; height:8%; width:14%; background:linear-gradient(180deg,#777b73,#42484a); border-top:3px solid rgba(204,202,185,.3); box-shadow:0 14px 22px rgba(0,0,0,.32); transform:skewY(-4deg); }
+  #projectn-hud-mockup .cover.left { left:30%; } #projectn-hud-mockup .cover.right { right:34%; width:12%; bottom:31%; }
+  #projectn-hud-mockup .unit { position:absolute; bottom:15%; width:5%; height:19%; z-index:2; }
+  #projectn-hud-mockup .unit .head { position:absolute; left:34%; top:0; width:32%; aspect-ratio:1; border-radius:50%; background:#202a31; border:2px solid rgba(188,210,215,.55); }
+  #projectn-hud-mockup .unit .torso { position:absolute; left:16%; top:19%; width:68%; height:53%; border-radius:35% 35% 15% 15%; background:linear-gradient(90deg,#1a252b,#53616a 50%,#202a30); }
+  #projectn-hud-mockup .unit .legs { position:absolute; left:25%; top:66%; width:50%; height:32%; background:linear-gradient(90deg,#192329 0 40%,transparent 41% 59%,#192329 60%); }
+  #projectn-hud-mockup .unit .rifle { position:absolute; right:-34%; top:34%; width:68%; height:4px; background:#171e23; transform:rotate(-9deg); }
+  #projectn-hud-mockup .player-unit { left:45%; bottom:9%; width:7%; height:25%; transform:scale(1.18); }
+  #projectn-hud-mockup .ally-a { left:37%; bottom:12%; transform:scale(.78); opacity:.92; }
+  #projectn-hud-mockup .ally-b { left:54%; bottom:13%; transform:scale(.82); opacity:.92; }
+  #projectn-hud-mockup .enemy { position:absolute; z-index:2; width:3.2%; height:7%; border-radius:38% 38% 18% 18%; background:linear-gradient(90deg,#343d40,#9b9b87 52%,#3b4546); box-shadow:0 0 18px rgba(255,112,94,.18); }
+  #projectn-hud-mockup .enemy::before { content:""; position:absolute; left:27%; top:28%; width:46%; height:7px; background:#ff655f; box-shadow:0 0 9px #ff514d; }
+  #projectn-hud-mockup .enemy::after { content:""; position:absolute; left:12%; right:12%; bottom:-18%; height:22%; border-radius:50%; background:#202629; }
+  #projectn-hud-mockup .e1 { left:44%; top:41%; } #projectn-hud-mockup .e2 { left:56%; top:47%; transform:scale(.8); }
+  #projectn-hud-mockup .aim { position:absolute; z-index:5; left:50%; top:47%; width:22px; height:22px; transform:translate(-50%,-50%); opacity:.9; }
+  #projectn-hud-mockup .aim::before,#projectn-hud-mockup .aim::after { content:""; position:absolute; background:#eaf4ee; box-shadow:0 0 5px rgba(235,255,244,.7); }
+  #projectn-hud-mockup .aim::before { left:10px; top:0; width:2px; height:22px; } #projectn-hud-mockup .aim::after { top:10px; left:0; width:22px; height:2px; }
+  #projectn-hud-mockup .objective { position:absolute; top:4%; left:3%; padding:10px 14px; background:var(--hud-bg-soft); border-left:3px solid var(--hud-cyan); letter-spacing:.02em; }
+  #projectn-hud-mockup .objective small { display:block; color:var(--hud-muted); font-size:.78em; margin-bottom:3px; }
+  #projectn-hud-mockup .burst-panel { position:absolute; top:19%; right:2%; width:10%; min-width:100px; max-width:132px; padding:9px; background:var(--hud-bg); }
+  #projectn-hud-mockup .burst-head { text-align:center; margin-bottom:7px; }
+  #projectn-hud-mockup .burst-head strong { letter-spacing:.04em; font-size:.86em; }
+  #projectn-hud-mockup .meter-label { display:flex; justify-content:space-between; color:var(--hud-muted); font-size:.72em; margin-bottom:5px; }
+  #projectn-hud-mockup .meter { height:6px; background:rgba(180,197,202,.18); margin-bottom:9px; }
+  #projectn-hud-mockup .meter b { display:block; width:100%; height:100%; background:linear-gradient(90deg,#52baca,#a0f0e9); }
+  #projectn-hud-mockup .portrait-stack { display:flex; flex-direction:column; align-items:center; gap:7px; }
+  #projectn-hud-mockup .portrait-token { position:relative; width:48px; height:54px; }
+  #projectn-hud-mockup .portrait { position:relative; width:100%; height:100%; overflow:hidden; background:linear-gradient(145deg,#5b7380,#1d2a34); }
+  #projectn-hud-mockup .portrait::before { content:""; position:absolute; top:6px; left:12px; width:16px; height:18px; border-radius:45% 45% 38% 38%; background:#d4d5cc; z-index:2; }
+  #projectn-hud-mockup .portrait::after { content:""; position:absolute; bottom:-6px; left:5px; width:30px; height:29px; border-radius:48% 48% 0 0; background:#253943; }
+  #projectn-hud-mockup .portrait.morrow { background:linear-gradient(145deg,#886843,#27323a); }
+  #projectn-hud-mockup .portrait.morrow::before { background:#d9b78b; box-shadow:0 -5px 0 3px #b8a77e; }
+  #projectn-hud-mockup .portrait.morrow::after { background:#4a3b32; }
+  #projectn-hud-mockup .portrait.rook { background:linear-gradient(145deg,#815941,#27333b); }
+  #projectn-hud-mockup .portrait.rook::before { background:#d3c1a9; box-shadow:0 -5px 0 3px #8e6448; }
+  #projectn-hud-mockup .portrait.rook::after { background:#523b32; }
+  #projectn-hud-mockup .roman { position:absolute; right:-3px; bottom:-3px; min-width:20px; padding:2px 4px; text-align:center; color:#f1f6f7; background:#17252c; font-size:.75em; font-weight:700; }
+  #projectn-hud-mockup .hp-panel { position:absolute; left:3%; bottom:5%; width:27%; padding:11px 13px; background:var(--hud-bg); }
+  #projectn-hud-mockup .hp-top { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:7px; }
+  #projectn-hud-mockup .hp-top strong { font-size:.95em; }
+  #projectn-hud-mockup .hp-top span { color:var(--hud-muted); font-size:.82em; }
+  #projectn-hud-mockup .hp-track { height:10px; background:rgba(210,222,223,.18); }
+  #projectn-hud-mockup .hp-track b { display:block; width:71%; height:100%; background:linear-gradient(90deg,#65d38e,#b1f0a8); }
+  #projectn-hud-mockup .hp-foot { display:flex; justify-content:space-between; margin-top:6px; color:var(--hud-muted); font-size:.76em; }
+  #projectn-hud-mockup .ammo-panel { position:absolute; right:27%; bottom:5%; padding:10px 13px; min-width:145px; text-align:right; background:var(--hud-bg); }
+  #projectn-hud-mockup .ammo-panel small { display:block; color:var(--hud-muted); font-size:.76em; }
+  #projectn-hud-mockup .ammo-panel strong { display:block; font-size:1.35em; letter-spacing:.04em; margin-top:2px; }
+  #projectn-hud-mockup .ammo-panel span { color:var(--hud-cyan); font-size:.76em; }
+  #projectn-hud-mockup .boss-tag { position:absolute; left:39%; top:29%; color:#ffc0ad; font-size:.72em; letter-spacing:.12em; text-shadow:0 1px 5px #000; }
+  #projectn-hud-mockup .boss-bar { position:absolute; left:40%; top:33%; width:14%; height:5px; background:rgba(0,0,0,.55); }
+  #projectn-hud-mockup .boss-bar b { display:block; width:78%; height:100%; background:#df7069; }
+  @media (max-width: 700px) {
+    #projectn-hud-mockup .burst-panel { min-width:0; width:17%; padding:6px; right:1%; top:8%; }
+    #projectn-hud-mockup .portrait-token { width:34px; height:39px; }
+    #projectn-hud-mockup .portrait::before { top:4px; left:9px; width:12px; height:13px; }
+    #projectn-hud-mockup .portrait::after { left:4px; width:23px; height:22px; }
+    #projectn-hud-mockup .hp-panel { width:36%; }
+    #projectn-hud-mockup .ammo-panel { right:34%; min-width:100px; }
+  }
+</style>
+
+<div id="projectn-hud-mockup" aria-label="Surface Echo 3인칭 슈팅 HUD 시안">
+  <div class="screen" role="img" aria-label="폐허 도시에서 전투 중인 3인칭 장면. 오른쪽에는 버스트 게이지와 로마 숫자가 붙은 세 캐릭터 초상화만 간단히 표시한다.">
+    <div class="road"></div><div class="lane-mark"></div><div class="horizon"></div>
+    <div class="building b1"></div><div class="building b2"></div><div class="building b3"></div><div class="building b4"></div>
+    <div class="debris d1"></div><div class="debris d2"></div>
+    <div class="cover left"></div><div class="cover right"></div>
+    <div class="enemy e1"></div><div class="enemy e2"></div>
+    <div class="boss-tag">Dreadbore · 동력핵 노출</div><div class="boss-bar"><b></b></div>
+    <div class="unit ally-a"><i class="head"></i><i class="torso"></i><i class="legs"></i><i class="rifle"></i></div>
+    <div class="unit player-unit"><i class="head"></i><i class="torso"></i><i class="legs"></i><i class="rifle"></i></div>
+    <div class="unit ally-b"><i class="head"></i><i class="torso"></i><i class="legs"></i><i class="rifle"></i></div>
+    <div class="aim"></div>
+
+    <div class="objective"><small>현재 목표</small>통신 중계소를 복구하라</div>
+
+    <section class="burst-panel" aria-label="버스트 게이지와 세 캐릭터 초상화">
+      <div class="burst-head"><strong>버스트</strong></div>
+      <div class="meter-label"><span>게이지</span><span>3 / 4</span></div>
+      <div class="meter" role="progressbar" aria-label="버스트 게이지" aria-valuenow="3" aria-valuemin="0" aria-valuemax="4"><b style="width:75%"></b></div>
+      <div class="portrait-stack">
+        <div class="portrait-token"><div class="portrait sable" role="img" aria-label="Sable 초상화"></div><span class="roman">I</span></div>
+        <div class="portrait-token"><div class="portrait morrow" role="img" aria-label="Morrow 초상화"></div><span class="roman">II</span></div>
+        <div class="portrait-token"><div class="portrait rook" role="img" aria-label="Rook 초상화"></div><span class="roman">III</span></div>
+      </div>
+    </section>
+
+    <div class="hp-panel">
+      <div class="hp-top"><strong>Rook · 돌격</strong><span>HP 78 / 110</span></div>
+      <div class="hp-track"><b></b></div>
+      <div class="hp-foot"><span>방어막 없음</span><span>캐릭터 전환 1 / 2 / 3</span></div>
+    </div>
+    <div class="ammo-panel"><small>돌격소총 · 재장전 R</small><strong>36 <span>/ 50</span></strong></div>
+  </div>
+</div>

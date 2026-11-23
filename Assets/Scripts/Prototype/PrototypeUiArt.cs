@@ -43,6 +43,66 @@ public static class PrototypeUiArt
         return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
+    public static Sprite CreateCharacterPortrait(Transform characterModel)
+    {
+        if (characterModel == null) return CreatePortrait(Color.gray, 0);
+
+        const int size = 128;
+        const int portraitLayer = 31;
+        int layerMask = 1 << portraitLayer;
+        Renderer[] renderers = characterModel.GetComponentsInChildren<Renderer>();
+        int[] originalLayers = new int[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalLayers[i] = renderers[i].gameObject.layer;
+            renderers[i].gameObject.layer = portraitLayer;
+        }
+
+        Bounds bounds = renderers.Length > 0 ? renderers[0].bounds : new Bounds(characterModel.position, Vector3.one);
+        for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+        Vector3 facePoint = bounds.center + Vector3.up * (bounds.extents.y * 0.58f);
+        foreach (Transform bone in characterModel.GetComponentsInChildren<Transform>())
+        {
+            if (bone.name == "Head" || bone.name.EndsWith("|Head", System.StringComparison.Ordinal))
+            {
+                facePoint = bone.position;
+                break;
+            }
+        }
+
+        GameObject cameraObject = new GameObject("Portrait Capture Camera");
+        Camera camera = cameraObject.AddComponent<Camera>();
+        camera.enabled = false;
+        camera.clearFlags = CameraClearFlags.SolidColor;
+        camera.backgroundColor = new Color(0f, 0f, 0f, 0f);
+        camera.cullingMask = layerMask;
+        camera.orthographic = true;
+        camera.orthographicSize = Mathf.Max(bounds.extents.y * 0.38f, 0.24f);
+        camera.aspect = 1f;
+        camera.nearClipPlane = 0.01f;
+        camera.farClipPlane = 5f;
+        camera.transform.SetPositionAndRotation(facePoint + characterModel.forward * 1.8f,
+            Quaternion.LookRotation(-characterModel.forward, Vector3.up));
+        RenderTexture target = new RenderTexture(size, size, 24, RenderTextureFormat.ARGB32);
+        target.Create();
+        camera.targetTexture = target;
+        camera.Render();
+
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = target;
+        Texture2D texture = CreateTexture(size, size, "Character Face Portrait");
+        texture.ReadPixels(new Rect(0f, 0f, size, size), 0, 0);
+        texture.Apply();
+        RenderTexture.active = previous;
+
+        for (int i = 0; i < renderers.Length; i++) renderers[i].gameObject.layer = originalLayers[i];
+        camera.targetTexture = null;
+        target.Release();
+        Object.Destroy(target);
+        Object.Destroy(cameraObject);
+        return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
+    }
+
     private static Sprite CreateSolid()
     {
         Texture2D texture = CreateTexture(1, 1, "Solid UI Pixel");
